@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-AutoMail</title>
+    <link rel='stylesheet' href="../css/main.css">
+    </link>
+    <script>
+        function scrollUpEffector() {
+            document.getElementById("titleText").className = "slideUp";
+            setTimeout(function () {
+                document.getElementById("registerButton").className = "darkButton customButton slideUp";
+                document.getElementById("loginButton").className = "darkButton customButton slideUp";
+            }, 1000)
+        }
+    </script>
+    <style>
+        #registerButton {
+            visibility: hidden;
+        }
+
+        #loginButton {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body onload='scrollUpEffector()'>
+    <div id="titleBlock">
+        <h1 id="titleText">&gtK-AutoMail&lt</h1>
+        <h2 id='scrollUp'></h2>
+    </div>
+    <div id="mainBlock">
+        <button id="registerButton" class="darkButton customButton" onclick="location.href ='/register'">등록하기</button>
+        <button id="loginButton" class="darkButton customButton" onclick="location.href = '/search'">조회하기</button>
+    </div>
+</body>
+
+</html>

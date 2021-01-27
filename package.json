@@ -1,0 +1,22 @@
+{
+    "name": "puppeteer-naver",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "engines": {
+        "node": "12.x"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "mysql": "^2.18.1",
+        "puppeteer": "^5.5.0",
+        "utf-8": "^2.0.0",
+        "utf8": "^3.0.0"
+    }
+}
