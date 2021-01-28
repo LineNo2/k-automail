@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>K-AutoMail</title>
     <link rel='stylesheet' href="../css/main.css">
     </link>
@@ -16,15 +16,6 @@
             }, 1000)
         }
     </script>
-    <style>
-        #registerButton {
-            visibility: hidden;
-        }
-
-        #loginButton {
-            visibility: hidden;
-        }
-    </style>
 </head>
 
 <body onload='scrollUpEffector()'>
@@ -32,9 +23,11 @@
         <h1 id="titleText" onclick="location.href='/'">&gtK-AutoMail&lt</h1>
         <h2 id='scrollUp'></h2>
     </div>
-    <div id="mainBlock">
-        <button id="registerButton" class="darkButton customButton" onclick="location.href ='/register'">등록하기</button>
-        <button id="loginButton" class="darkButton customButton" onclick="location.href = '/search'">조회하기</button>
+    <div class="search-box">
+        <form action="" method="get"></form>
+        <div class="input-wrap">
+            <input type="text" name="" id="">
+        </div>
     </div>
 </body>
 
