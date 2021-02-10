@@ -1,0 +1,55 @@
+#result-wrap {
+    text-align: start;
+    padding: 2% 2% 5% 2%;
+    border-radius: 5px;
+    margin: auto;
+    /* width: 80vw; */
+    /* background-color: #3d3d3d; */
+    box-shadow: black 0px 0px 20px 2px;
+}
+
+#soldier-logo-wrap {
+    background-image: url('../img/army.png');
+    margin: auto;
+    border-radius: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 15vw;
+    height: 15vw;
+}
+
+#soldier-info-wrap {
+    text-align: center;
+} 
+
+.result-element {
+    display: block;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+    color: white;
+}
+
+.radio-wrap > .radio-label{
+    display: inline-block;
+    cursor:unset;
+}
+
+
+.number-container {
+    margin-left: 9vw;
+    margin-top: 8vh;
+    font-weight: bolder;
+    font-size: 7vh;
+    height: 7vh;
+    width: 5vw;
+    color: white;
+}
+
+.checked {
+    /* border: 1px solid white; */
+    transform: scale(1.3);
+}

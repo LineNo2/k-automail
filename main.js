@@ -61,10 +61,10 @@ async function updateDate() {
         }
     }
 
-    if (checker === 1) {
-        dateString = (currentTime.getMonth() + 1) + '-' + currentTime.getDate();
-        fs.writeFileSync('./db/backup/soldier-backup-' + dateString + '.json', JSON.stringify(soldierList), 'utf8');
-    }
+    // if (checker === 1) {
+    //     dateString = (currentTime.getMonth() + 1) + '-' + currentTime.getDate();
+    //     fs.writeFileSync('./db/backup/soldier-backup-' + dateString + '.json', JSON.stringify(soldierList), 'utf8');
+    // }
 
     return;
 }

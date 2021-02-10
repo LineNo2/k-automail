@@ -87,11 +87,29 @@ hr {
     margin: 5vh;
 }
 
+h3 {
+    color: white;
+}
+
 .button-wrap {
     margin: 5vh;
 }
 
+#popup-box-background{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
 .popup-box {
+    z-index: 2;
     background-color: #332940;
     box-shadow: black 0px 0px 20px 2px;
     border-radius: 10px;
@@ -106,7 +124,7 @@ hr {
 }
 
 .popup-box-contents-top {
-    margin:auto;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -120,11 +138,11 @@ hr {
 
 .popup-box-contents-top>i {
     font-size: 10vh;
-    margin-top:3vh;
+    margin-top: 3vh;
 }
 
 .popup-box-contents-top>h3 {
-    margin-top:3vh;
+    margin-top: 3vh;
     width: 70%;
 }
 
@@ -138,31 +156,68 @@ hr {
     color: #adadad;
     font-size: 3vh;
     margin-bottom: 1vh;
-
 }
 
-input[type=button] {
+input[type=button], input[type=submit] {
     cursor: pointer;
     outline: none;
-
 }
 
+.input-wrap, .radio-wrap, .detailed-form-wrap {
+    margin: 5% 0 5% 0;
+    color: white;
+}
+
+.info-hidden {
+    opacity: 0;
+}
+
+.logo-box:hover .shadow {
+    margin: 120% auto;
+    text-align: center;
+    animation: opacityOn 1s infinite;
+}
+
+.logo-box {
+    border: 1px solid transparent;
+    height: 15vh;
+    width: 15vw;
+    /* background-color: #4B5320; */
+    border-radius: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.radio-wrap label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.radio-wrap img {
+    height: auto;
+    width: auto;
+}
+
+.detailed-hidden {
+    display: none;
+}
 
 @media (min-width: 768px) {
     .popup-box-contents-top>i {
-        color: green;
+        /* color: green; */
     }
     .popup-box {
         left: 25vw;
         width: 50vw;
         height: 21vh;
     }
-    
 }
 
 @media (min-width: 1023px) {
     .popup-box-contents-top>i {
-        color: black;
+        /* color: black; */
     }
     .popup-box {
         left: 30vw;

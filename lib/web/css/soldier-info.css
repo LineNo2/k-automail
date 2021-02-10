@@ -1,0 +1,24 @@
+.valid-check {
+    width: 13.3333px !important;
+    height: auto;
+}
+
+#error-print {
+    font-size: 2vh;
+    font-style: italic;
+    height: 20vh;
+    /* text-align: start; */
+    /* margin-left: 25vw; */
+}
+
+.status-invalid {
+    color: #ff2424;
+}
+
+.status-valid {
+    color: #77dd77;
+}
+
+#verify-result-print{
+    font-style: italic;
+}

@@ -6,16 +6,20 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>K-AutoMail</title>
     <link rel='stylesheet' href="../css/main.css">
-    </link>
+    <link rel='stylesheet' href="../css/soldier-info.css">
+    <script src="./../js/soldier-info.js"></script>
+    <script src="./../js/search.js"></script>
     <script>
         function scrollUpEffector() {
             document.getElementById("titleText").className = "slideUp";
             setTimeout(function () {
-                document.getElementById("registerButton").className = "darkButton customButton slideUp";
-                document.getElementById("loginButton").className = "darkButton customButton slideUp";
+                document.getElementById("mainBlock").className = "slideUp search-box";
             }, 1000)
         }
+        let error_arr = [1,1,1,0,0,0];
     </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://kit.fontawesome.com/98e6642357.js" crossorigin="anonymous"></script>
 </head>
 
 <body onload='scrollUpEffector()'>
@@ -23,11 +27,43 @@
         <h1 id="titleText" onclick="location.href='/'">&gtK-AutoMail&lt</h1>
         <h2 id='scrollUp'></h2>
     </div>
-    <div class="search-box">
-        <form action="" method="get"></form>
-        <div class="input-wrap">
-            <input type="text" name="" id="">
-        </div>
+    <div id="mainBlock" class="search-box">
+        <form id="soldierInfo" autocomplete="off" method="get" action="/result">
+            <div class="form-wrap">
+                <div class="input-wrap">
+                    <h2>검색</h2>
+                    <h3>이름</h3>
+                    <input placeholder="훈련병이름" class="InputBox darkBox" name="soldier-name" autocomplete="off"
+                        id="soldier-name" type="text" onkeyup="validation(0,'#soldier-name');">
+                    <i id="soldier-name-valid" class="fas valid-check"></i>
+                </div>
+                <div class="input-wrap">
+                    <h3>생년월일</h3>
+                    <input class="InputBox darkBox" type="text" autocomplete="off" id="soldier-birth"
+                        name="soldier-birth" placeholder="ex) 20001005" maxlength="8"
+                        onkeyup="validation(1,'#soldier-birth');">
+                    <i id="soldier-birth-valid" class="fas valid-check"></i>
+                </div>
+                <div class="input-wrap">
+                    <h3>입영일자</h3>
+                    <p class="paragraph">현재 시간 기준 입영일자가 60일 이상 지난 훈련병은 검색할 수 없습니다.</p>
+                    <input class="InputBox darkBox" type="text" autocomplete="off" id="enterdate" name="enterdate"
+                        placeholder="ex) 20200215" maxlength="8" onkeyup="validation(5,'#enterdate');">
+                    <i id="enterdate-valid" class="fas valid-check"></i>
+                    <div id="enterdate-warning" class="info-hidden" style="color:#ff2424;font-style:italic">
+                        <i class="fas fa-exclamation-triangle"></i>입영일자 검색 조건에 해당하지 않습니다
+                    </div>
+                </div>
+                <h3>검색</h3>
+                    <p class="paragraph">입력한 정보의 유효여부를 검증합니다.<br>오류가 있다면 어디가 문제인지 보여줍니다.<br>문제가 없다면 자동으로 결과창으로 이동합니다.</p>
+                    <div id="verify-result-print" class="info-hidden">
+                    </div>
+                    <div class="button-wrap">
+                        <input type="button" value="검색" id="verify" class="darkButton customButton"
+                            onclick="formSubmit();" tabindex="-1">
+                    </div>
+            </div>
+        </form>
     </div>
 </body>
 
