@@ -6,16 +6,6 @@ const airForce = require('./lib/nodejs/airforce.js');
 const army = require('./lib/nodejs/army.js')
 const crawler = require('./lib/nodejs/crawler.js');
 
-// let fileWriteFlag = 0;
-
-// let userList = fs.readFileSync('./db/soldier.json');
-
-// let originalList = JSON.parse(userList)
-
-// let soldierList = originalList;
-
-// let writeableSoldierList = Object.assign(soldierList);
-
 module.exports = {
     main: async function (soldierList) {
 

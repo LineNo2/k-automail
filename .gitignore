@@ -8,10 +8,14 @@ lib/nodejs/loldumpcrawler.js
 
 db/backup/
 db/backup.json
+db/armySelection.json
 
 backup-main.js
 AutoMoeni.js
 async loop test.js
 dummy.json
+
+test.js
+test.html
 
 helo.js

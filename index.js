@@ -3,6 +3,8 @@ var bodyParser = require('body-parser');
 var app = express()
 var fs = require('fs');
 
+const { admin_id, admin_pw } = require('/db/admin-account.json');
+
 const sendMail = require('./main.js');
 
 const schoolArr = ['HR', 'K1', 'K2', 'JT', 'HJ', 'BP'];
@@ -591,7 +593,7 @@ app.get('/admin', async function (req, res) {
         let decoded = new Buffer.alloc(16, encoded, 'base64').toString();
         let name = decoded.split(':')[0];
         let password = decoded.split(':')[1];
-        if (name === 'hirasawa' && password === 'yui1127') {
+        if (name === admin_id && password === admin_pw) {
             console.log('관리자 페이지에 접속')
             html = await adminPagePrint();
             res.send(html);
