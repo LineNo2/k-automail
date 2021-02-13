@@ -7,7 +7,9 @@ lib/nodejs/armyMailWrite.js
 lib/nodejs/loldumpcrawler.js
 
 db/backup/
+db/backup.json
 
+backup-main.js
 AutoMoeni.js
 async loop test.js
 dummy.json

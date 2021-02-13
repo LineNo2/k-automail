@@ -19,7 +19,9 @@ body {
 
 #mainBlock {
     margin: auto;
-    width: 80vw;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    width: 90vw;
     text-align: center;
     visibility: hidden;
 }
@@ -55,9 +57,11 @@ body {
 }
 
 .customButton {
+    height: 10vh;
+    cursor: pointer;
     margin: auto;
     display: block;
-    width: 20vw;
+    width: 60vw;
     padding: 0;
     outline: none;
 }
@@ -69,9 +73,10 @@ body {
 }
 
 .InputBox {
+    text-align: center;
     border-style: solid;
     border-width: 0 0 2px 0;
-    width: 20vw;
+    width: 50vw;
     outline: none;
 }
 
@@ -95,7 +100,7 @@ h3 {
     margin: 5vh;
 }
 
-#popup-box-background{
+#popup-box-background {
     display: none;
     position: fixed;
     z-index: 1;
@@ -179,16 +184,15 @@ input[type=button], input[type=submit] {
 }
 
 .logo-box {
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     height: 15vh;
-    width: 15vw;
+    width: calc(90vw/4);
     /* background-color: #4B5320; */
     border-radius: 10px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-
 
 .radio-wrap label {
     display: inline-block;
@@ -205,8 +209,20 @@ input[type=button], input[type=submit] {
 }
 
 @media (min-width: 768px) {
+    #mainBlock {
+        width: 85vw;
+    }
+    .logo-box {
+        width: calc(85vw/4);
+    }
     .popup-box-contents-top>i {
         /* color: green; */
+    }
+    .customButton {
+        width: 40vw;
+    }
+    .InputBox {
+        width: 40vw;
     }
     .popup-box {
         left: 25vw;
@@ -216,8 +232,20 @@ input[type=button], input[type=submit] {
 }
 
 @media (min-width: 1023px) {
+    #mainBlock {
+        width: 80vw;
+    }
+    .logo-box {
+        width: calc(80vw/4);
+    }
     .popup-box-contents-top>i {
         /* color: black; */
+    }
+    .customButton {
+        width: 20vw;
+    }
+    .InputBox {
+        width: 20vw;
     }
     .popup-box {
         left: 30vw;
@@ -279,5 +307,56 @@ input[type=button], input[type=submit] {
     100% {
         opacity: 0;
         -webkit-transform: translateY(90%);
+    }
+}
+
+#loading-background {
+    position: fixed;
+    left: 30vw;
+    top: 30vh;
+    margin: auto;
+    text-align: center;
+    width: 40vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.loading-bar {
+    background-color: #ddd;
+    height: 30vh;
+    width: 5vw;
+    margin: auto;
+}
+
+.loading-bar:nth-of-type(1) {
+    animation: loading 1s infinite;
+}
+
+.loading-bar:nth-of-type(2) {
+    animation: loading 1s infinite 250ms;
+}
+
+.loading-bar:nth-of-type(3) {
+    animation: loading 1s infinite 500ms;
+}
+
+.loading-bar:nth-of-type(4) {
+    animation: loading 1s infinite 250ms;
+}
+
+.loading-bar:nth-of-type(5) {
+    animation: loading 1s infinite;
+}
+
+@keyframes loading {
+    0% {
+        height: 30vh;
+    }
+    50% {
+        height: 5vh;
+    }
+    0% {
+        height: 30vh;
     }
 }

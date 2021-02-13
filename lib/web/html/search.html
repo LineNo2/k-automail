@@ -24,7 +24,7 @@
 
 <body onload='scrollUpEffector()'>
     <div id="titleBlock">
-        <h1 id="titleText" onclick="location.href='/'">&gtK-AutoMail&lt</h1>
+        <h1 id="titleText" onclick="location.href='/'">&gtA&lt</h1>
         <h2 id='scrollUp'></h2>
     </div>
     <div id="mainBlock" class="search-box">
@@ -46,13 +46,10 @@
                 </div>
                 <div class="input-wrap">
                     <h3>입영일자</h3>
-                    <p class="paragraph">현재 시간 기준 입영일자가 60일 이상 지난 훈련병은 검색할 수 없습니다.</p>
+                    <p class="paragraph">현재 시간 기준 입영일자가 60일 이상 지난 훈련병은 DB에서 삭제됩니다.</p>
                     <input class="InputBox darkBox" type="text" autocomplete="off" id="enterdate" name="enterdate"
                         placeholder="ex) 20200215" maxlength="8" onkeyup="validation(5,'#enterdate');">
                     <i id="enterdate-valid" class="fas valid-check"></i>
-                    <div id="enterdate-warning" class="info-hidden" style="color:#ff2424;font-style:italic">
-                        <i class="fas fa-exclamation-triangle"></i>입영일자 검색 조건에 해당하지 않습니다
-                    </div>
                 </div>
                 <h3>검색</h3>
                     <p class="paragraph">입력한 정보의 유효여부를 검증합니다.<br>오류가 있다면 어디가 문제인지 보여줍니다.<br>문제가 없다면 자동으로 결과창으로 이동합니다.</p>

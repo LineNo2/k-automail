@@ -10,12 +10,13 @@
     <link rel='stylesheet' href="../css/soldier-info.css">
     <script>
         let unitArr = ['육군훈련소-논산', '1사단-파주', '2사단-양구', '3사단-철원', '5사단-연천', '6사단-철원', '7사단-화천', '9사단-고양', '11사단-홍천', '12사단-인제', '15사단-화천', '17사단-인천', '20사단-양평', '21사단-양구', '22사단-고성', '23사단-삼척', '25사단-양주', '27사단-화천', '28사단-파주', '30사단-고양', '31사단-광주', '32사단-세종', '35사단-임실', '36사단-원주', '37사단-증평', '39사단-함안', '50사단-대구', '51사단-화성', '53사단-부산', '55사단-용인']
-        let schoolArr = ['기본군사훈련단'];
-        let typeDisplayArr = ['<h2>대한민국 육군</h2><div class="input-wrap" style="margin:5% 0 0 0;"><h3>훈련소</h3><p class="paragraph">입소하는 훈련소 정보를 입력합니다<br>논산 육군훈련소의 경우 인편 수신이 되지 않을 수도 있습니다.</p><input class="InputBox darkBox" type="text" id="training-unit" name="training-unit"placeholder="사단" onkeyup="search_detailed(0)" onfocus="search_detailed(0);get_focus(' + '\'training-unit\'' + ');" autocomplete="off"></div> ',
+        let schoolArr = ['없음', '군수1학교', '군수2학교', '정보통신학교', '행정학교', '방공포병학교'];
+        let typeDisplayArr = ['<h2>대한민국 육군</h2><div class="input-wrap" style="margin:5% 0 0 0;"><h3>훈련소</h3><p class="paragraph">입소하는 훈련소 정보를 입력합니다<br>논산 육군훈련소의 경우 인편 수신이 되지 않을 수도 있습니다.</p><input class="InputBox darkBox" type="text" id="training-unit" name="training-unit"placeholder="사단" onkeyup="search_detailed(0)" onfocus="search_detailed(0);get_focus(\'+ \'training-unit\' +\');" autocomplete="off"></div> ',
             '<h2>대한민국 해군</h2><p class="paragraph">현재 제공하지 않는 서비스입니다.</p>',
-        '<h2>대한민국 공군</h2><h3>특기학교</h3><p class="paragraph"><del>기본군사훈련 이후 특기학교에서의 인터넷 편지 수령을 위한 창입니다.<br>예정된 특기학교가 없다면 <strong>기본군사훈련단</strong>을 선택하세요.</del> <br> ※ 특기학교지원은 하지 않습니다.</p><div class="input-wrap" style="margin:5% 0 0 0;"><input class="InputBox darkBox" type="text" id="training-school" name="training-school"placeholder="특기학교" onkeyup="search_detailed(1)"onfocus="search_detailed(1);get_focus(' + '\'training-school\'' + ');" autocomplete="off">',
+        '<h2>대한민국 공군</h2><h3>특기학교</h3><p class="paragraph">기본군사훈련 이후 특기학교에서의 인터넷 편지 수령을 위한 창입니다.<br>예정된 특기학교가 없다면 <strong>없음</strong>을 선택하세요.</p><div class="input-wrap" style="margin:5% 0 0 0;"><input class="InputBox darkBox" type="text" id="training-school" name="training-school"placeholder="특기학교" onkeyup="search_detailed(1)"onfocus="search_detailed(1);get_focus(\' + \'training-school\' + \');" autocomplete="off">',
             '<h2>대한민국 해병대</h2><p class="paragraph">현재 제공하지 않는 서비스입니다.</p>'
         ]
+        // let infoArr = ['#wfb-detail', '#kbo-detail', '#lol-detail', '#yna-detail'];
         let infoArr = ['#yna', '#lol', '#kbo', '#wfb'];
         let mailcount = [0, 0, 0, 0];
         let backup_mailcount = [];
@@ -23,6 +24,39 @@
         let maxMail = 0;
         let interest = 0;
         let error_arr = [1, 1, 1, 1, 1, 1]; // 0 -> name, 1 -> birth , 2 -> enter , 3 -> mail, 4 -> type, 5 -> password
+        
+        function ajaxEdit() {
+            $('#loading-background').attr('style', '');
+            if (!(( 0 < maxMail && maxMail <= 10) && !error_arr[3])){
+                $('#loading-background').attr('style', 'display: none;');
+                // print_error();
+                return;
+            }
+            else {
+                $.ajax({
+                    url: "/submit",
+                    data: {
+                        "submit-type": 1,
+                        "soldierName": $('#soldier-name').val(),
+                        "soldierBirth": $('#soldier-birth').val(),
+                        "enterdate": $('#enterdate').val(),
+                        "maxMail": $('#maxMail').val(),
+                        "interested": (($('#yna').is(':checked') ? 4 : 0) + ($('#lol').is(':checked') ? 8 : 0) + ($('#kbo').is(':checked') ? 2 : 0) + ($('#wfb').is(':checked') ? 1 : 0)),
+                        "type": $('#type').val(),
+                        "training": ($('#training-unit').val() === undefined ? schoolArr.indexOf($('#training-school').val()) : unitArr.indexOf($('#training-unit').val())),
+                        "password": $('#password_').val()
+
+                    },
+                    type: "POST",
+                    success: function (result) {
+                        $(".get-script").html(result);
+                        $('#loading-background').attr('style', 'display: none;');
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        }
     </script>
     <script src="./../js/register.js"></script>
     <script src="./../js/soldier-info.js"></script>
@@ -30,7 +64,7 @@
     <script src="https://kit.fontawesome.com/98e6642357.js" crossorigin="anonymous"></script>
 </head>
 
-<body onload='scrollUpEffector()' draggable="false">
+<body onload="scrollUpEffector();${onloadScript}" draggable="false">
     <div id="titleBlock">
         <h1 id="titleText" onclick="location.href='/'">&gtA&lt</h1>
 
@@ -41,26 +75,16 @@
                 <div class="input-wrap">
                     <h2>기본정보</h2>
                     <h3>이름</h3>
-                    <input placeholder="훈련병이름" class="InputBox darkBox" name="soldier-name" autocomplete="off"
-                        id="soldier-name" type="text" onkeyup="validation(0,'#soldier-name');">
-                    <i id="soldier-name-valid" class="fas valid-check"></i>
+                    <input placeholder="훈련병이름" class="InputBox darkBox fixed-inputbox" name="soldier-name" autocomplete="off" id="soldier-name" type="text" value="${soldierName}" readonly>
                 </div>
                 <div class="input-wrap">
                     <h3>생년월일</h3>
-                    <input class="InputBox darkBox" type="text" autocomplete="off" id="soldier-birth"
-                        name="soldier-birth" placeholder="ex) 20001005" maxlength="8"
-                        onkeyup="validation(1,'#soldier-birth');">
-                    <i id="soldier-birth-valid" class="fas valid-check"></i>
+                    <input class="InputBox darkBox fixed-inputbox" type="text" autocomplete="off" id="soldier-birth" name="soldier-birth" placeholder="ex) 20001005" maxlength="8" value="${soldierBirth}" readonly>
                 </div>
                 <div class="input-wrap">
                     <h3>입영일자</h3>
                     <p class="paragraph">현재 시간 기준 입영일자가 30일 이내인 훈련병만 등록할 수 있습니다</p>
-                    <input class="InputBox darkBox" type="text" autocomplete="off" id="enterdate" name="enterdate"
-                        placeholder="ex) 20200215" maxlength="8" onkeyup="validation(2,'#enterdate');">
-                    <i id="enterdate-valid" class="fas valid-check"></i>
-                    <div id="enterdate-warning" class="info-hidden" style="color:#ff2424;font-style:italic">
-                        <i class="fas fa-exclamation-triangle"></i>입영일자가 현재 시간 기준 30일을 초과했습니다
-                    </div>
+                    <input class="InputBox darkBox fixed-inputbox" type="text" autocomplete="off" id="enterdate" name="enterdate" placeholder="ex) 20200215" maxlength="8" value="${enterDate}" readonly>
                 </div>
             </div>
             <hr>
@@ -69,13 +93,10 @@
                     <h2>편지정보</h2>
                     <h3>편지 장수</h3>
                     <div id="mail-count">
-                        <div id="minus" class="increment-button fas fa-minus" style="background-color:#ff2424;"
-                            onclick="control_count(0)" tabindex="0">
+                        <div id="minus" class="increment-button fas fa-minus" style="background-color:#ff2424;" onclick="control_count(0)" tabindex="0">
                         </div>
-                        <input class="InputBox darkBox" style="width:20vw;text-align: center;font-size: 5vw;" type="text"
-                            name="maxMail" id="maxMail" value="0" tabindex="-1" readonly>
-                        <div id="plus" class="increment-button fas fa-plus" style="background-color:#77dd77"
-                            onclick="control_count(1)" tabindex="0">
+                        <input class="InputBox darkBox" style="width:20vw;text-align: center;font-size: 5vw;" type="text" name="maxMail" id="maxMail" value="${maxMail}" tabindex="-1" readonly>
+                        <div id="plus" class="increment-button fas fa-plus" style="background-color:#77dd77" onclick="control_count(1)" tabindex="0">
                         </div>
                     </div>
                 </div>
@@ -89,26 +110,22 @@
                     </div>
                     <label class="radio-label" for="yna">
                         <input type="checkbox" name="yna" id="yna" value="">
-                        <div class="logo-box" style="background-image: url('../../img/yna.png');"
-                            onclick="infoTextEffector(0);" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/yna.png');" onclick="infoTextEffector(0);" tabindex="0">
                             <div class="number-container info-hidden"><i class="fas fa-check"></i></div>
                         </div>
                     </label><label class="radio-label" for="lol">
                         <input type="checkbox" name="lol" id="lol" value="">
-                        <div class="logo-box" style="background-image: url('../../img/lol.png');"
-                            onclick="infoTextEffector(1);" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/lol.png');" onclick="infoTextEffector(1);" tabindex="0">
                             <div class="number-container info-hidden"><i class="fas fa-check"></i></div>
                         </div>
                     </label><label class="radio-label" for="kbo">
                         <input type="checkbox" name="kbo" id="kbo" value="">
-                        <div class="logo-box" style="background-image: url('../../img/kbo.png');"
-                            onclick="infoTextEffector(2);" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/kbo.png');" onclick="infoTextEffector(2);" tabindex="0">
                             <div class="number-container info-hidden"><i class="fas fa-check"></i></div>
                         </div>
                     </label><label class="radio-label" for="wfb">
                         <input type="checkbox" name="wfb" id="wfb" value="">
-                        <div class="logo-box" style="background-image: url('../../img/wfb.png');"
-                            onclick="infoTextEffector(3);" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/wfb.png');" onclick="infoTextEffector(3);" tabindex="0">
                             <div class="number-container info-hidden"><i class="fas fa-check"></i></div>
                         </div>
                     </label>
@@ -149,72 +166,41 @@
                     <input type="hidden" name="type" id="type">
                     <label class="radio-label" for="army">
                         <input type="radio" name="soldierName" id="army" value="army">
-                        <div class="logo-box " style="background-image: url('../../img/army.png');"
-                            onclick="typeTextEffector('#army-detail');detail_display(0);" tabindex="0">
+                        <div class="logo-box " style="background-image: url('../../img/army.png');" onclick="typeTextEffector('#army-detail');detail_display(0);" tabindex="0">
                         </div>
                     </label><label class="radio-label" for="navy">
                         <input type="radio" name="soldierName" id="navy" value="navy">
-                        <div class="logo-box" style="background-image: url('../../img/navy.png');"
-                            onclick="typeTextEffector('#navy-detail');detail_display(1);" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/navy.png');" onclick="typeTextEffector('#navy-detail');detail_display(1);" tabindex="0">
                         </div>
                     </label><label class="radio-label" for="airforce">
                         <input type="radio" name="soldierName" id="airforce" value="airforce">
-                        <div class="logo-box" style="background-image: url('../../img/airforce.png');"
-                            onclick="typeTextEffector('#airforce-detail');detail_display(2)" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/airforce.png');" onclick="typeTextEffector('#airforce-detail');detail_display(2)" tabindex="0">
                         </div>
                     </label><label class="radio-label" for="marine">
                         <input type="radio" name="soldierName" id="marine" value="marine">
-                        <div class="logo-box" style="background-image: url('../../img/marine.png');"
-                            onclick="typeTextEffector('#marine-detail');detail_display(3)" tabindex="0">
+                        <div class="logo-box" style="background-image: url('../../img/marine.png');" onclick="typeTextEffector('#marine-detail');detail_display(3)" tabindex="0">
                         </div>
                     </label>
                 </div>
                 <div id="type-wrap">
                     <div id="detail-display">
                     </div>
-                    <div id="search-wrap">
+                    <!-- <div id="search-wrap">
                         <div id="search-result-counter"></div>
                         <div id="search-result-wrap"> </div>
                         <div id="search-reset-wrap" class="info-hidden">
                             <div class="button-wrap">
-                                <input type="button" id="search-reset"
-                                    class="darkButton customButton" style="margin-top: 0;" value="재설정"
-                                    onclick="reset_detailed()" tabindex="-1">
+                                <input type="button" id="search-reset" class="darkButton customButton" style="margin-top: 0;" value="재설정" onclick="reset_detailed()" tabindex="-1">
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="form-wrap">
                 <div id="result-send" class="info-hidden input-wrap">
                     <hr>
-                    <h2>제출</h2>
-                    <!-- <p class="paragraph">지금까지 입력한 정보를 비밀번호와 함께 제출합니다.<br>비밀번호는 훈련병에게 보낸 인편을 조회하거나, 정보를 수정할 때
-                        사용됩니다.<br>정확하지 않은 정보를 입력시 오류창이 출력됩니다.</p> -->
-                    <h3>비밀번호</h3>
-                    <p class="paragraph">훈련병 정보를 수정 및 조회에 사용할 암호를 설정해주세요.<br>길이는 4 ~ 8 자리 사이입니다.</p>
-                    <div class="input-wrap">
-                        <input type="password" name="password_" id="password_" class="InputBox darkBox"
-                            onkeyup="validation(3,'#password-check');" placeholder="비밀번호 입력" maxlength="8"><i
-                            id="soldier-name-valid" class="fas valid-check" tabindex="-1"></i>
-                        <div id="password-check-warning" class="info-hidden" style="color:#ff2424;font-style:italic">
-                            <i class="fas fa-exclamation-triangle"></i>비밀번호 길이 제한을 지켜주세요.
-                        </div>
-                    </div>
-
-                    <h3>비밀번호 재검증</h3>
-                    <div class="input-wrap">
-                        <input type="password" id="password-check" class="InputBox darkBox" placeholder="비밀번호 재입력"
-                            maxlength="8" onkeyup="validation(3,'#password-check');" tabindex="-1">
-                        <i id="password-check-valid" class="fas valid-check"></i>
-                    </div>
-                    <h3>검증</h3>
-                    <p class="paragraph">입력한 정보의 유효여부를 검증합니다.<br>오류가 있다면 어디가 문제인지 보여줍니다.<br>문제가 없다면 자동으로 제출합니다.</p>
-                    <div id="verify-result-print" class="info-hidden">
-                    </div>
                     <div class="button-wrap">
-                        <input type="button" value="제출" id="verify" class="darkButton customButton"
-                            onclick="get_scroll_alert();ajaxSubmit();" tabindex="-1">
+                        <input type="button" value="제출" id="verify" class="darkButton customButton" onclick="ajaxEdit();" tabindex="-1">
                     </div>
                 </div>
             </div>

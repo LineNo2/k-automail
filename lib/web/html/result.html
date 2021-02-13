@@ -7,25 +7,53 @@
     <title>K-AutoMail</title>
     <link rel='stylesheet' href="../css/main.css">
     <link rel='stylesheet' href="../css/result.css">
+    <script src="./../js/result.js"></script>
     </link>
     <script>
-        let unitArr = ['육군훈련소-논산', '1사단-파주', '2사단-양구', '3사단-철원', '5사단-연천', '6사단-철원', '7사단-화천', '9사단-고양', '11사단-홍천', '12사단-인제', '15사단-화천', '17사단-인천', '20사단-양평', '21사단-양구', '22사단-고성', '23사단-삼척', '25사단-양주', '27사단-화천', '28사단-파주', '30사단-고양', '31사단-광주', '32사단-세종', '35사단-임실', '36사단-원주', '37사단-증평', '39사단-함안', '50사단-대구', '51사단-화성', '53사단-부산', '55사단-용인']
-        let schoolArr = ['없음', '군수1학교', '군수2학교', '정보통신학교', '행정학교', '방공포병학교'];
-        let typeDisplayArr = ['<h2>대한민국 육군</h2><div class="input-wrap" style="margin:5% 0 0 0;"><h3>훈련소</h3><p class="paragraph">입소하는 훈련소 정보를 입력합니다<br>논산 육군훈련소의 경우 인편 수신이 되지 않을 수도 있습니다.</p><input class="InputBox darkBox" type="text" id="training-unit" name="training-unit"placeholder="사단" onkeyup="search_detailed(0)" onfocus="search_detailed(0);get_focus(' + '\'training-unit\'' + ');" autocomplete="off"></div> ',
-            '<h2>대한민국 해군</h2><p class="paragraph">현재 제공하지 않는 서비스입니다.</p>',
-        '<h2>대한민국 공군</h2><h3>특기학교</h3><p class="paragraph">기본군사훈련 이후 특기학교에서의 인터넷 편지 수령을 위한 창입니다.<br>예정된 특기학교가 없다면 <strong>없음</strong>을 선택하세요.</p><div class="input-wrap" style="margin:5% 0 0 0;"><input class="InputBox darkBox" type="text" id="training-school" name="training-school"placeholder="특기학교" onkeyup="search_detailed(1)"onfocus="search_detailed(1);get_focus(' + '\'training-school\'' + ');" autocomplete="off">',
-            '<h2>대한민국 해병대</h2><p class="paragraph">현재 제공하지 않는 서비스입니다.</p>'
-        ]
-        // let infoArr = ['#wfb-detail', '#kbo-detail', '#lol-detail', '#yna-detail'];
-        let infoArr = ['#yna', '#lol', '#kbo', '#wfb'];
-        let mailcount = [0, 0, 0, 0];
-        let backup_mailcount = [];
-        let stack = [];
-        let maxMail = 0;
-        let interest = 0;
-        let error_arr = [1, 1, 1, 1, 1, 1]; // 0 -> name, 1 -> birth , 2 -> enter , 3 -> mail, 4 -> type, 5 -> password
-        let error_msg = ['이름이 정확하지 않습니다.', '생년월일이 정확하지 않습니다.', ['입영일자가 정확하지 않습니다.', '입영일자가 현재 시간 기준 30일을 초과했습니다.'], ['편지 장수를 설정하지 않았습니다.', '남은 편지가 있습니다.'], '군 세부정보가 입력되지 않았습니다.', ['재입력한 비밀번호가 옳지 않습니다.', '비밀번호의 길이 제한이 지켜지지 않았습니다']]
+        function deletion_submit() {
+            $('#loading-background').attr('style', '');
+            $.ajax({
+                url: "/delete",
+                data: {
+                    "password": $('#password_').val(),
+                    "soldier-name": "${soldierName}",
+                    "soldier-birth": "${soldierBirth}",
+                    "enterdate": "${enterDate}"
+                },
+                type: "POST",
+                success: function (result) {
+                    $("#get-script").html(result);
+                    $('#loading-background').attr('style', 'display: none;');
+                }, error: function () {
+                }
+            });
+        }
+        // function edition_submit() {
+        //     $('#loading-background').attr('style', '');
+        //     $.ajax({
+        //         url: "/edit",
+        //         data: {
+        //             "password": $('#password_').val(),
+        //             "soldier-name": "${soldierName}",
+        //             "soldier-birth": "${soldierBirth}",
+        //             "enterdate": "${enterDate}"
+        //         },
+        //         type: "POST",
+        //         success: function (result) {
+        //             $("#get-script").html(result);
+        //             $('#loading-background').attr('style', 'display: none;');
+        //         }, error: function () {
+        //         }
+        //     });
+        // }
     </script>
+    <style>
+        .h3-title{
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+        }
+    </style>
     <script src="./../js/register.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://kit.fontawesome.com/98e6642357.js" crossorigin="anonymous"></script>
@@ -33,44 +61,89 @@
 
 <body onload='scrollUpEffector()' draggable="false">
     <div id="titleBlock">
-        <h1 id="titleText" onclick="location.href='/'">&gtK-AutoMail&lt</h1>
+        <h1 id="titleText" onclick="location.href='/'">&gtA&lt</h1>
 
     </div>
     <div id="mainBlock">
         <div id="result-wrap">
-            <div id="soldier-logo-wrap" class="result-element"></div>
+            <div id="soldier-logo-wrap" class="result-element" style="background-image: url('../img/${type}.png');"></div>
             <div id="soldier-info-wrap" class="result-element">
-                <h2 id="name" class="title">이호선</h2>
-                <h3 id="unit" class="title">6사단-철원</h3>
-                <h3 id="interest" class="title">관심분야</h3>
+                <h2 id="name" class="title">${soldierName}</h2>
+                <p class="paragraph" style="font-style: italic;">생년월일 ${soldierBirth.slice(0, 4) + '.' + soldierBirth.slice(4, 6) + '.' + soldierBirth.slice(6, 8)}</p>
+                <hr>
+                <h3 id="unit" class="title">${type === "army" ? unitArrValue[unitArr.indexOf(trainingUnit)] : schoolArrValue[trainingUnit]}</h3>
+                <p class="paragraph" style="font-style: italic;">입영일 ${enterDate.slice(0, 4) + '.' + enterDate.slice(4, 6) + '.' + enterDate.slice(6, 8)}</p>
+                <hr>
+                <h3 id="interest" class="title">구독</h3>
                 <div class="radio-wrap">
                     <div class="radio-label" for="yna">
-                        <div class="logo-box checked" style="background-image: url('../../img/yna.png');" disabled>
-                            <div class="number-container"><i class="fas fa-check"></i>
+                        <div class="logo-box" style="background-image: url('../../img/yna.png');" disabled>
+                            <div class="number-container">
+                                ${interested & 8 ? `<i class="fas fa-check"></i>` : ``}
+                            </div>
+                        </div>
+                    </div><div class="radio-label" for="lol">
+                        <div class="logo-box" style="background-image: url('../../img/lol.png');" disabled>
+                            <div class="number-container">
+                                ${interested & 4 ? `<i class="fas fa-check"></i>` : ``}
+                            </div>
+                        </div>
+                    </div><div class="radio-label" for="kbo">
+                        <div class="logo-box" style="background-image: url('../../img/kbo.png');" disabled>
+                            <div class="number-container">
+                                ${interested & 2 ? `<i class="fas fa-check"></i>` : ``}
+                            </div>
+                        </div>
+                    </div><div class="radio-label" for="wfb">
+                        <div class="logo-box" style="background-image: url('../../img/wfb.png');" disabled>
+                            <div class="number-container">
+                                ${interested & 1 ? `<i class="fas fa-check"></i>` : ``}
                             </div>
                         </div>
                     </div>
-                    <div class="radio-label" for="lol">
-                        <div class="logo-box" style="background-image: url('../../img/lol.png');" disabled>
-                            <div class="number-container"></div>
-                        </div>
-                    </div>
-                    <div class="radio-label" for="kbo">
-                        <div class="logo-box" style="background-image: url('../../img/kbo.png');" disabled>
-                            <div class="number-container"></div>
-                        </div>
-                    </div>
-                    <div class="radio-label" for="wfb">
-                        <div class="logo-box" style="background-image: url('../../img/wfb.png');" disabled>
-                            <div class="number-container"></div>
-                        </div>
+                </div>
+                <hr>
+            </div>
+            <div id="kakkoii-counter">
+                <h3 id="max-mail" class="kakkoii-counter-elem">하루</h3><h3 id="total-mail" class="kakkoii-counter-elem">지금까지</h3><p class="kakkoii-counter-elem kakkoii-counter-number">${maxMail}</p><p class="kakkoii-counter-elem kakkoii-counter-number">${sentMail}</p><p class="kakkoii-counter-elem">장</p><p class="kakkoii-counter-elem">장</p>
+            </div>
+            <hr>
+            <form action="/edit" method="post">
+                <h3 id="interest" class="title">비밀번호</h3>
+                <p class="paragraph" style="text-align:center">비밀번호 입력시 수정 및 삭제가 가능합니다.</p>
+                <div id="password-input">
+                    <div class="input-wrap" style="text-align: center;">
+                        <input type="password" name="password_" id="password_" class="InputBox darkBox" placeholder="비밀번호 입력" maxlength="8">
                     </div>
                 </div>
-                <h3 id="max-mail" class="title">하루 <strong style="color:red;">N</strong>장</h3>
-                <h3 id="total-mail" class="title">총 <strong style="color:red;">N</strong>장</h3>
-            </div>
+                <input type="hidden" name="soldier-name" value="${soldierName}">
+                <input type="hidden" name="soldier-birth" value="${soldierBirth}">
+                <input type="hidden" name="enterdate" value="${enterDate}">
+                <h3 id="edit" class="h3-title">수정</h3><h3 id="delete" class="h3-title">삭제</h3>
+                <i style="color:white" class="fas fa-pen control-button" tabindex="0" onclick="$('form').submit()"></i><i class="fas fa-trash-alt control-button" tabindex="0" onclick="deletion_submit();"></i>
+            </form>
+            <!-- <i style="color:white" class="fas fa-pen control-button" tabindex="0" onclick="popup_up();"></i><i class="fas fa-trash-alt control-button" tabindex="0" onclick="deletion_submit();"></i> -->
+        </div>
+
+    </div>
+    <div id="loading-background" style="display: none;">
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+    </div>
+    <div id="submit-popup" class="popup-box detailed-hidden">
+        <div class="popup-box-contents-top">
+            <i id="submit-popup-title-icon" class="fas fa-exclamation-triangle"></i>
+            <h3 id="submit-popup-title">수정 기능을 <br> 안만들었습니다..</h3>
+        </div>
+        <div class="popup-box-contents-footer">
+            <input type="button" value="확인" id="submit-popup-button" tabindex="-1" onclick="popup_down();">
         </div>
     </div>
+    <div id="popup-box-background"></div>
+    <div id="get-script"></div>
 </body>
 
 </html>

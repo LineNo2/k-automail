@@ -1,6 +1,6 @@
 #result-wrap {
     text-align: start;
-    padding: 2% 2% 5% 2%;
+    padding: 2% 0 5% 0;
     border-radius: 5px;
     margin: auto;
     /* width: 80vw; */
@@ -9,8 +9,10 @@
 }
 
 #soldier-logo-wrap {
-    background-image: url('../img/army.png');
+    
     margin: auto;
+    margin-top: 5vh;
+  
     border-radius: 10px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -21,7 +23,7 @@
 
 #soldier-info-wrap {
     text-align: center;
-} 
+}
 
 .result-element {
     display: block;
@@ -33,13 +35,13 @@
     color: white;
 }
 
-.radio-wrap > .radio-label{
+.radio-wrap>.radio-label {
     display: inline-block;
-    cursor:unset;
+    cursor: unset;
 }
 
-
 .number-container {
+    position: absolute;
     margin-left: 9vw;
     margin-top: 8vh;
     font-weight: bolder;
@@ -52,4 +54,44 @@
 .checked {
     /* border: 1px solid white; */
     transform: scale(1.3);
+}
+
+#kakkoii-counter {
+    width: 100%;
+}
+
+#kakkoii-counter > * {
+    text-align: center;
+    width: 50%;
+    display: inline-block;
+}
+
+
+/* .kakkoii-counter-elem {
+    text-align: center;
+    width: 50%;
+    display: inline-block;
+} */
+
+#kakkoii-counter>p {
+    margin-block-end: 0;
+    margin-block-start: 0;
+    font-size: 10vh;
+    color: white;
+}
+/* #77dd */
+.kakkoii-counter-number {
+    color: #77dd77 !important; 
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.control-button{
+    text-align: center;
+    display: inline-block;
+    width: 50%;
+    font-size: 10vh;
+    margin-top: 3vh;
+    color: #ff2424;
+    cursor: pointer;
 }

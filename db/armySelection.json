@@ -1,0 +1,25 @@
+{
+    "writeable": {
+        "이현욱": {
+            "type": "army",
+            "birth": "20001030",
+            "joinTrainUnit": "0",
+            "isRegistered": 1,
+            "isEnrolled": 1,
+            "joinDate": "20210111",
+            "option": {
+                "interested": 14,
+                "maxMail": 7,
+                "lastArticle": {
+                    "lolInven": "251194"
+                },
+                "WPM": "2021-02-16"
+            },
+            "password": 1111,
+            "sentMail": 53
+        }
+    },
+    "unwriteable":{
+
+    }
+}
