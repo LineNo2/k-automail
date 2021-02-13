@@ -575,9 +575,9 @@ app.post('/submit', async function (req, res) {
 
 })
 
-app.listen(5000, function () {
+app.listen(3000, function () {
     console.log(__dirname + '/lib/web')
-    console.log('Example app listening on port 5000!')
+
 });
 
 app.get('/admin', async function (req, res) {
