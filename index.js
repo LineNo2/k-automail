@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var app = express()
 var fs = require('fs');
 
-const { admin_id, admin_pw } = require('/db/admin-account.json');
+const { admin_id, admin_pw } = require('./db/admin-account.json');
 
 const sendMail = require('./main.js');
 
