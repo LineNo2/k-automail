@@ -7,6 +7,17 @@ var fs = require('fs');
 
 const { admin_id, admin_pw } = require('./db/admin-account.json');
 
+var util = require('util');
+var logFile = fs.createWriteStream('log.txt', { flags: 'w' });
+var logStdout = process.stdout;
+
+console.log = function () {
+    var curTime = new Date();
+    logFile.write(`[${curTime.getMonth()}/${curTime.getDate()} ${curTime.getHours()}:${curTime.getMinutes()}:${curTime.getSeconds()}] ` + util.format.apply(null, arguments) + '\n');
+    logStdout.write(`[${curTime.getMonth()}/${curTime.getDate()} ${curTime.getHours()}:${curTime.getMinutes()}:${curTime.getSeconds()}] ` + util.format.apply(null, arguments) + '\n');
+}
+console.error = console.log;
+
 const sendMail = require('./main.js');
 
 const schoolArr = ['HR', 'K1', 'K2', 'JT', 'HJ', 'BP'];
@@ -16,27 +27,24 @@ const unitArrValue = ['육군훈련소-논산', '1사단-파주', '2사단-양�
 const schoolArrValue = { 'HR': '기본군사훈련단', 'K1': '군수1학교', 'K2': '군수2학교', 'JT': '정보통신학교', 'HJ': '행정학교', 'BP': '방공포병학교' }
 // let schoolArr = ['없음', '군수1학교', '군수2학교', '정보통신학교', '행정학교', '방공포병학교'];
 
-// var template = require('./lib/template.js');
-
 let userList = fs.readFileSync('./db/soldier.json');
 
 let originalList = JSON.parse(userList)
-
-// let soldierList = originalList['writeable'];
 
 let writeableSoldierList = originalList['writeable'];
 let unwriteableSoldierList = originalList['unwriteable'];
 
 let preventDuplicateRunFlag = 0;
+let mailWriterRunTime;
 let mailWriteTimer;
 
-function saveJSON(filename) {
+async function saveJSON(filename) {
     filename = `./db/${filename}.json`
     console.log('saving to ' + filename)
     fs.writeFileSync(filename, JSON.stringify(originalList), 'utf8');
 }
 
-function backupJSON(filename) {
+async function backupJSON(filename) {
     let currentTime = new Date();
     saveJSON(`${filename}-backup-${currentTime.getDate()}`)
 }
@@ -49,7 +57,7 @@ async function updateDate() {
     currentTime.setHours(currentTime.getHours() + (timeZone + 540) / 60); // 미국 타임존 기준 우리나라 시간 구함.
 
     console.log('====updateDate 실행====')
-    saveJSON(`soldier-backup-${currentTime.getDate()}`)
+    await saveJSON(`soldier-backup-${currentTime.getDate()}`)
     console.log(`====soldier-backup-${currentTime.getDate()}에 현재정보 저장====`)
     for (soldierName in writeableSoldierList) {
         let joinDate = writeableSoldierList[soldierName]['joinDate'];
@@ -88,7 +96,7 @@ async function updateDate() {
         }
     }
     if (checker) {
-        saveJSON(`soldier`)
+        await saveJSON(`soldier`)
         console.log(`====soldier.json 에 현재정보 저장====`)
     }
     console.log('====updateDate 종료====')
@@ -239,6 +247,10 @@ async function adminPagePrint() {
     html += ` 
    <a href="/admin?run=1"><button>시작</button></a>
    <a href="/admin?run=0"><button>정지</button></a>
+   <h2>인편 작동중 확인</h2>
+   <h3>${preventDuplicateRunFlag ? "작동중<h3>작동 시간: " + mailWriterRunTime + "</h3>" : "정지중"}</h3>
+   <textarea rows="10" cols="200" style="overflow:auto" readonly>
+   ${fs.readFileSync('log.txt', 'utf8')}</textarea>
    </body></html>`
     return html;
 }
@@ -578,8 +590,7 @@ app.post('/submit', async function (req, res) {
 })
 
 app.listen(process.env.PORT || 5000, function () {
-    console.log(__dirname + '/lib/web')
-
+    // console.log(__dirname + '/lib/web')
 });
 
 app.get('/admin', async function (req, res) {
@@ -604,18 +615,20 @@ app.get('/admin', async function (req, res) {
                 let timeZone = currentTime.getTimezoneOffset();
                 currentTime.setHours(currentTime.getHours() + (timeZone + 540) / 60); // 미국 타임존 기준 우리나라 시간 구함.
                 console.log('작동을 시작합니다. ')
-                //타이머 작동중 먼저 작동
+                //타이머 작동중 먼저 작동 
+                preventDuplicateRunFlag = 1;
+                mailWriterRunTime = `${currentTime.getHours()}시 ${currentTime.getMinutes()}분 ${currentTime.getSeconds()}초`;
                 console.log('서버시간' + currentTime);
-                updateDate();
+                await updateDate();
                 console.log('메일 작성 시작');
                 writeableSoldierList = await sendMail.main(writeableSoldierList);
                 console.log('메일 작성 완료');
                 console.log(writeableSoldierList);
-                saveJSON(`soldier`);
+                await saveJSON(`soldier`);
 
 
                 //==끝==
-                preventDuplicateRunFlag = 1;
+
 
                 mailWriteTimer = setInterval(async () => {
                     console.log('서버시간' + currentTime);
@@ -634,7 +647,9 @@ app.get('/admin', async function (req, res) {
                 currentTime.setHours(currentTime.getHours() + (timeZone + 540) / 60); // 미국 타임존 기준 우리나라 시간 구함.
                 console.log('작동을 정지합니다. ')
                 console.log('서버시간' + currentTime);
+                await updateDate();
                 preventDuplicateRunFlag = 0;
+                mailWriterRunTime = ``;
                 clearTimeout(mailWriteTimer);
             }
         }
