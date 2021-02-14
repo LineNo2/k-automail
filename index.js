@@ -615,9 +615,22 @@ app.get('/admin', async function (req, res) {
                 let timeZone = currentTime.getTimezoneOffset();
                 currentTime.setHours(currentTime.getHours() + (timeZone + 540) / 60); // 미국 타임존 기준 우리나라 시간 구함.
                 console.log('작동을 시작합니다. ')
-                //타이머 작동중 먼저 작동 
+
                 preventDuplicateRunFlag = 1;
                 mailWriterRunTime = `${currentTime.getHours()}시 ${currentTime.getMinutes()}분 ${currentTime.getSeconds()}초`;
+
+                mailWriteTimer = setInterval(async () => {
+                    console.log('서버시간' + currentTime);
+                    await updateDate();
+                    if (preventDuplicateRunFlag) {
+                        console.log('메일 작성 시작');
+                        writeableSoldierList = await sendMail.main(writeableSoldierList);
+                        console.log('메일 작성 완료');
+                        await saveJSON(`soldier`);
+                    }
+                }, 86400000);
+
+                //타이머 작동중 먼저 작동 
                 console.log('서버시간' + currentTime);
                 await updateDate();
                 console.log('메일 작성 시작');
@@ -625,21 +638,7 @@ app.get('/admin', async function (req, res) {
                 console.log('메일 작성 완료');
                 console.log(writeableSoldierList);
                 await saveJSON(`soldier`);
-
-
-                //==끝==
-
-
-                mailWriteTimer = setInterval(async () => {
-                    console.log('서버시간' + currentTime);
-                    updateDate();
-                    if (preventDuplicateRunFlag) {
-                        console.log('메일 작성 시작');
-                        writeableSoldierList = await sendMail.main(writeableSoldierList);
-                        console.log('메일 작성 완료');
-                        saveJSON(`soldier`);
-                    }
-                }, 86400000);
+                //==끝==          
             }
             else if (query.run === '0' && preventDuplicateRunFlag === 1) {
                 let currentTime = new Date();
