@@ -114,7 +114,7 @@ function dataValidation(ajaxResult) {
         let dateStr = ajaxResult.enterdate.slice(0, 4) + '-' + ajaxResult.enterdate.slice(4, 6) + '-' + ajaxResult.enterdate.slice(6, 8);
         let enterdate = new Date(dateStr);
         let timedif = enterdate - curdate;
-        let month = 2592000000;
+        let month = 2*2592000000;
         if (timedif <= month && month * (-1) <= timedif) {
             errCode += 4;
         }
@@ -589,7 +589,7 @@ app.post('/submit', async function (req, res) {
 
 })
 
-app.listen(process.env.PORT || 5000, function () {
+app.listen(6125, function () {
     // console.log(__dirname + '/lib/web')
 });
 

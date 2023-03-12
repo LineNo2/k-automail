@@ -158,9 +158,10 @@ module.exports = {
 
             console.log('더캠프에 아직 추가되지 않은 육군이 있습니다.')
 
+            console.log(`${JSON.stringify(unenrolledArmy)}`);
+
             unenrolledArmy = await army.enrollSoldier(unenrolledArmy);
 
-            console.log(unenrolledArmy)
 
             for (soldierName in unenrolledArmy) {
                 soldierList[soldierName]['isEnrolled'] = unenrolledArmy[soldierName];
